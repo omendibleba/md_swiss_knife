@@ -29,7 +29,7 @@ if args.ensemble == 'NVT':
 
     # REad values of interest 
     #step = log.get("Step") ## Read steps
-    time = log.get("Time")
+    time = log.get("Time")/10E5
     temp = log.get("Temp")
     press = log.get("Press")
     potEng = log.get("PotEng")
