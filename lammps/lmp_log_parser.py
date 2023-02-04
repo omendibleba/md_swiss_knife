@@ -36,7 +36,7 @@ if args.ensemble == 'NVT':
     kinEng = log.get("KinEng")
 
     # Determine the length of the arrays 
-    n = len(time)
+    n = len(time[args.start:])
     print(' The number of frames is ', n)
 
     # # Temperature average
@@ -51,7 +51,7 @@ if args.ensemble == 'NVT':
 
 
     # # For the Kinetic ENergy 
-    kinEng_ave = round(np.average(kinEng[args.start:]),6)
+    kinEng_ave = round(np.average(kinEng[args.start:]),3)
 
 
 
@@ -59,29 +59,29 @@ if args.ensemble == 'NVT':
 
     fig, axs = plt.subplots(2, 2,figsize=(10,10))
     fig.suptitle('LAMMPS log file Analysis: '+str(args.title),fontsize=16 , fontweight='bold')
-    axs[0, 0].plot(time,temp,color="blue")
+    axs[0, 0].plot(time[args.start:],temp[args.start:],color="blue")
     axs[0, 0].hlines(temp_ave,xmin=min(time[args.start:]),xmax=max(time),color="red",label = "Temperature = {} K".format(temp_ave))
     axs[0, 0].set_xlabel("Time (ps)",fontsize=16 , fontweight='bold')
     axs[0, 0].set_ylabel("Temperature (K)",fontsize=16 , fontweight='bold')
     axs[0, 0].tick_params(axis='both', which='major', labelsize=12)
     axs[0, 0].legend(fontsize=12)
 
-    axs[0, 1].plot(time,press,color="blue")
+    axs[0, 1].plot(time[args.start:],press[args.start:],color="blue")
     axs[0, 1].hlines(press_ave,xmin=min(time[args.start:]),xmax=max(time),color="red",label = "Ave Pressure = {} atm".format(press_ave))
     axs[0, 1].set_xlabel("Time (ps)",fontsize=16 , fontweight='bold')
     axs[0, 1].set_ylabel("Pressure (atm)",fontsize=16 , fontweight='bold')
     axs[0, 1].tick_params(axis='both', which='major', labelsize=12)
     axs[0, 1].legend(fontsize=12)
 
-    axs[1, 0].plot(time,potEng,color="blue")
+    axs[1, 0].plot(time[args.start:],potEng[args.start:],color="blue")
     axs[1, 0].hlines(potEng_ave,xmin=min(time[args.start:]),xmax=max(time),color="red",label = "Ave Potential Energy = {} Kcal/mol".format(potEng_ave))
     axs[1, 0].set_xlabel("Time (ps)",fontsize=16 , fontweight='bold')
     axs[1, 0].set_ylabel("Potential Energy (Kcal/mol)",fontsize=16 , fontweight='bold')
     axs[1, 0].tick_params(axis='both', which='major', labelsize=12)
     axs[1, 0].legend(fontsize=12,loc='lower right')
 
-    axs[1, 1].plot(time,kinEng,color="blue")
-    axs[1, 1].hlines(kinEng_ave,xmin=min(time[args.start:]),xmax=max(time),color="red",label = "Average Density = {} g/$cm^3$ ".format(kinEng_ave ))
+    axs[1, 1].plot(time[args.start:],kinEng[args.start:],color="blue")
+    axs[1, 1].hlines(kinEng_ave,xmin=min(time[args.start:]),xmax=max(time),color="red",label = "Ave Kinetic Energy = {} Kcal/mol ".format(kinEng_ave ))
     axs[1, 1].set_xlabel("Time (ps)",fontsize=16 , fontweight='bold')
     axs[1, 1].set_ylabel("Kinetic Energy (Kcal/mol)",fontsize=16 , fontweight='bold')
     axs[1, 1].tick_params(axis='both', which='major', labelsize=12)
@@ -107,7 +107,7 @@ elif args.ensemble == 'NPT':
     kinEng = log.get("KinEng")
 
     # Determine the length of the arrays 
-    n = len(time)
+    n = len(time[args.start:])
     print(' The number of frames is ', n)
 
     # # Temperature average
@@ -122,7 +122,7 @@ elif args.ensemble == 'NPT':
 
 
     # # For the Kinetic ENergy 
-    kinEng_ave = round(np.average(kinEng[args.start:]),6)
+    kinEng_ave = round(np.average(kinEng[args.start:]),3)
 
 
 
@@ -130,29 +130,29 @@ elif args.ensemble == 'NPT':
 
     fig, axs = plt.subplots(2, 2,figsize=(10,10))
     fig.suptitle('LAMMPS log file Analysis: '+str(args.title),fontsize=16 , fontweight='bold')
-    axs[0, 0].plot(time,temp,color="blue")
+    axs[0, 0].plot(time[args.start:],temp[args.start:],color="blue")
     axs[0, 0].hlines(temp_ave,xmin=min(time[args.start:]),xmax=max(time),color="red",label = "Temperature = {} K".format(temp_ave))
     axs[0, 0].set_xlabel("Time (ps)",fontsize=16 , fontweight='bold')
     axs[0, 0].set_ylabel("Temperature (K)",fontsize=16 , fontweight='bold')
     axs[0, 0].tick_params(axis='both', which='major', labelsize=12)
     axs[0, 0].legend(fontsize=12)
 
-    axs[0, 1].plot(time,density,color="blue")
-    axs[0, 1].hlines(press_ave,xmin=min(time[args.start:]),xmax=max(time),color="red",label = "Ave Pressure = {} atm".format(press_ave))
+    axs[0, 1].plot(time[args.start:],density[args.start:],color="blue")
+    axs[0, 1].hlines(press_ave,xmin=min(time[args.start:]),xmax=max(time),color="red",label = "Ave Density = {} $g/cm^3$".format(press_ave))
     axs[0, 1].set_xlabel("Time (ps)",fontsize=16 , fontweight='bold')
     axs[0, 1].set_ylabel("Density $(g/cm^3)$",fontsize=16 , fontweight='bold')
     axs[0, 1].tick_params(axis='both', which='major', labelsize=12)
     axs[0, 1].legend(fontsize=12)
 
-    axs[1, 0].plot(time,potEng,color="blue")
+    axs[1, 0].plot(time[args.start:],potEng[args.start:],color="blue")
     axs[1, 0].hlines(potEng_ave,xmin=min(time[args.start:]),xmax=max(time),color="red",label = "Ave Potential Energy = {} Kcal/mol".format(potEng_ave))
     axs[1, 0].set_xlabel("Time (ps)",fontsize=16 , fontweight='bold')
     axs[1, 0].set_ylabel("Potential Energy (Kcal/mol)",fontsize=16 , fontweight='bold')
     axs[1, 0].tick_params(axis='both', which='major', labelsize=12)
     axs[1, 0].legend(fontsize=12,loc='lower right')
 
-    axs[1, 1].plot(time,kinEng,color="blue")
-    axs[1, 1].hlines(kinEng_ave,xmin=min(time[args.start:]),xmax=max(time),color="red",label = "Average Density = {} g/$cm^3$ ".format(kinEng_ave ))
+    axs[1, 1].plot(time[args.start:],kinEng[args.start:],color="blue")
+    axs[1, 1].hlines(kinEng_ave,xmin=min(time[args.start:]),xmax=max(time),color="red",label = "Ave Kinetic Energy = {} Kcal/mol ".format(kinEng_ave ))
     axs[1, 1].set_xlabel("Time (ps)",fontsize=16 , fontweight='bold')
     axs[1, 1].set_ylabel("Kinetic Energy (Kcal/mol)",fontsize=16 , fontweight='bold')
     axs[1, 1].tick_params(axis='both', which='major', labelsize=12)
