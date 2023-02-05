@@ -18,6 +18,7 @@ parser.add_argument('forces', help='The name of the LAMMPS forces.dump file')
 parser.add_argument('-s', '--start', type=int, default=-500, help='The starting frame. Also defines the number of frames.')
 parser.add_argument('-t', '--training', default=500, help='Number of frames to be included iin the training set ')
 parser.add_argument('-c', '--complete', default=False, help='Wehter or of not you want to create an npz of the whole trajectory.',action='store_true')
+parser.add_argument('-ti','--title', default='npz_data', help='The name of the npz file')
 args = parser.parse_args()
 
 # Define function that parses into diictionary
@@ -95,11 +96,11 @@ for ts in last500:
 
 # Get the number of frames
 num_frames = len(last500)
-print('The number of frames is: ',num_frames)
+#print('The number of frames is: ',num_frames)
 
 # Get the number of atoms in the first frame (assuming all frames have the same number of atoms)
 num_atoms = len(last500[list(last500.keys())[0]]['atoms'])
-print('The number of atoms is: ',num_atoms)
+#print('The number of atoms is: ',num_atoms)
 
 
 # Create a new empty array with the desired shape
@@ -161,7 +162,7 @@ poteng = np.array(poteng)
 poteng = poteng[args.start:]
 
 
-# Fot the atoy type array 
+# Fot the atom type array 
 data = parse_lammpstrj(filename=args.forces)
 data_copy = deepcopy(data)
 for ts in data_copy:
@@ -193,10 +194,10 @@ for i in range(len(data_copy[0]['atoms'])):
 type_atom_num
 
 if args.complete == True:
-    np.savez('but7_600KPE_last500_train.npz', R=coordinates, F=forces, z=type_atom_num, E=poteng)
+    np.savez(str(args.title).replace(' ','_')+'.npz', R=coordinates, F=forces, z=type_atom_num, E=poteng)
 # save the data in a file npz format 
 else:
-    np.savez('but7_600KPE_last500_train.npz', R=coordinates[:int(args.training)], F=forces[:int(args.training)], z=type_atom_num, E=poteng[:int(args.training)])
-    np.savez('but7_600KPE_last500_test.npz', R=coordinates[int(args.training):], F=forces[int(args.training):], z=type_atom_num, E=poteng[int(args.training):])
+    np.savez(str(args.title).replace(' ','_')+'_train.npz', R=coordinates[:int(args.training)], F=forces[:int(args.training)], z=type_atom_num, E=poteng[:int(args.training)])
+    np.savez(str(args.title).replace(' ','_')+'_test.npz', R=coordinates[int(args.training):], F=forces[int(args.training):], z=type_atom_num, E=poteng[int(args.training):])
 
 print('Files created sucessfully!')
