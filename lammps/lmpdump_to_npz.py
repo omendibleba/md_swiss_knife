@@ -17,7 +17,7 @@ parser.add_argument('log_file_name', help='The name of the LAMMPS log file')
 parser.add_argument('forces', help='The name of the LAMMPS forces.dump file')
 parser.add_argument('-s', '--start', type=int, default=-500, help='The starting frame. Also defines the number of frames.')
 parser.add_argument('-t', '--training', default=500, help='Number of frames to be included iin the training set ')
-parser.add_argument('-c', '--complete', default=True, help='Wehter or of not you want to create an npz of the whole trajectory.')
+parser.add_argument('-c', '--complete', default=False, help='Wehter or of not you want to create an npz of the whole trajectory.',action='store_true')
 args = parser.parse_args()
 
 # Define function that parses into diictionary
@@ -196,7 +196,7 @@ if args.complete == True:
     np.savez('but7_600KPE_last500_train.npz', R=coordinates, F=forces, z=type_atom_num, E=poteng)
 # save the data in a file npz format 
 else:
-    np.savez('but7_600KPE_last500_train.npz', R=coordinates[:args.training], F=forces[:args.training], z=type_atom_num, E=poteng[:args.training])
-    np.savez('but7_600KPE_last500_test.npz', R=coordinates[args.training:], F=forces[args.training:], z=type_atom_num, E=poteng[args.training:])
+    np.savez('but7_600KPE_last500_train.npz', R=coordinates[:int(args.training)], F=forces[:int(args.training)], z=type_atom_num, E=poteng[:int(args.training)])
+    np.savez('but7_600KPE_last500_test.npz', R=coordinates[int(args.training):], F=forces[int(args.training):], z=type_atom_num, E=poteng[int(args.training):])
 
 print('Files created sucessfully!')

@@ -16,11 +16,20 @@ dump myDump all custom 4000 forces.dump id type x y z fx fy fz
 import numpy as np
 from copy import deepcopy
 import lammps_logfile as lmplog
+import argparse
     
 # Define dump file or trajectory file and the log file 
 
-filename = 'forces.dump'
-logfile = 'log.lammps'
+# Define ther parser and argument inputs 
+parser = argparse.ArgumentParser(description='Generate npz file from lammps dump and log file')
+parser.add_argument('log_file', help='The name of the log file')
+parser.add_argument('dump_file', help='The name of the dump file')
+parser.add_argument('-n','--npz_file',default='npz_data', help='The name of the npz file')
+args = parser.parse_args()
+
+
+filename = args.dump_file
+logfile = args.log_file
 
 # Define function that parses into diictionary
 
@@ -204,6 +213,6 @@ type_atom_num = create_array_of_types(filename=filename)
 
 ## Save arrays into .npz format
 
-np.savez('toluene_t5_potEng.npz', R=coordinates, F=forces, z=type_atom_num, E=etotal)
+np.savez(str(args.npz_file).replace(' ','_')+'.npz', R=coordinates, F=forces, z=type_atom_num, E=etotal)
 
 print('Files in .npz format were saved successfully! Thanks!!')
