@@ -1,11 +1,10 @@
-# %%
+#! /usr/bin/env python3
 import numpy as np
 from copy import deepcopy
 import argparse
 
 
 
-#%%
 # Define parser 
 parser = argparse.ArgumentParser(description='MOdify atom type array in npz file created from lmpdump_to_npz.py')
 parser.add_argument('npz', type=str, help='npz file to modify')
@@ -15,13 +14,13 @@ parser.add_argument('dumpfile', type=str, help='Original dump file from which np
 args = parser.parse_args()
 
 
-# %%
+
 filename = args.dumpfile
 
 #load npz file
-npz = args.npz
+npz = npz = np.load(args.npz)
 
-# %%
+
 # Define function that parses into diictionary
 def parse_lammpstrj(filename):
 
@@ -78,10 +77,9 @@ def parse_lammpstrj(filename):
 # Use the function to parse the LAMMPS trajectory file
 data = parse_lammpstrj(filename=args.dumpfile)
 
-# %%
+
 data[0]
 
-# %%
 # Determine the values of the keys ofrom the given start 
 keys = list(data.keys())
 last500_keys = keys[500:]
@@ -93,7 +91,7 @@ for key in last500_keys:
     last500[key] = data[key]
 
 
-# %%
+
 # Fot the atom type array 
 
 data_copy = deepcopy(data)
@@ -112,10 +110,10 @@ num_atoms = len(data_copy[list(data_copy.keys())[0]]['atoms'])
 type_atom_num = np.zeros((1, num_atoms))
 type_atom_num  = type_atom_num.flatten()
 
-# %%
-type_atom_num
 
-# %%
+#type_atom_num
+
+#
 for i in range(len(data_copy[0]['atoms'])):
 
     print(data_copy[0]['atoms'][i])
@@ -138,12 +136,12 @@ for i in range(len(data_copy[0]['atoms'])):
 
 #type_atom_num
 
-# %%
+#
 # Save it with the new type atom array 
+print("Saving npz file with new atom type array")
+np.savez(args.npz, R=npz['R'], F=npz['F'], z=type_atom_num, E=npz['E'])
 
-np.savez('npz_dataClWat_NVT_2ns.npz', R=npz['R'], F=npz['F'], z=type_atom_num, E=npz['E'])
-
-# %%
+# 
 print("All done! Thank You!")
 
 
