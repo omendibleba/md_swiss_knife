@@ -26,9 +26,14 @@ args = parser.parse_args()
 traj = read(args.traj, index=':')
 #test_data = np.load('toluene_t5_potEng.npz')
 #test_data = np.load('../but7_600KPE_last500_test.npz')
-test_data = np.load(args.test_data)
-# Create an array of zerow of length traj
 
+# Read .npz file 
+test_data = np.load(args.test_data)
+
+# Determine the number of atoms 
+natoms = len(test_data['z'])
+
+# Create an array of zerow of length traj
 energies = np.zeros(len(traj))
 
 print('The number of evaluated configurations is ', len(traj))
@@ -38,7 +43,6 @@ print('The number of evaluated configurations is ', len(traj))
 for i in range(len(traj)):
     energies[i] = traj[i].get_potential_energy()
 
-# Read .npz file 
 
 
 len(test_data['E'])
