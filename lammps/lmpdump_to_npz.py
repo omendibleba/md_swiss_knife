@@ -18,6 +18,7 @@ parser.add_argument('forces', help='The name of the LAMMPS forces.dump file')
 parser.add_argument('-s', '--start', type=int, default=-500, help='The starting frame. Also defines the number of frames.')
 parser.add_argument('-t', '--training', default=500, help='Number of frames to be included iin the training set ')
 parser.add_argument('-c', '--complete', default=False, help='Wehter or of not you want to create an npz of the whole trajectory.',action='store_true')
+parser.add_argument('-sys','--system', default='but1', help='The name of the system. Options: But1.Naclwat,ADP,OG')
 parser.add_argument('-ti','--title', default='npz_data', help='The name of the npz file')
 args = parser.parse_args()
 
@@ -180,18 +181,48 @@ num_atoms = len(data_copy[list(data_copy.keys())[0]]['atoms'])
 type_atom_num = np.zeros((1, num_atoms))
 type_atom_num  = type_atom_num.flatten()
 
-for i in range(len(data_copy[0]['atoms'])):
+if args.system == 'But1':
+    for i in range(len(data_copy[0]['atoms'])):
 
-    #print(data_copy[0]['atoms'][i])    
-    if data_copy[0]['atoms'][i] == 1.0:
+        #print(data_copy[0]['atoms'][i])    
+        if data_copy[0]['atoms'][i] == 1.0:
 
-        type_atom_num[i] = int(6)
+            type_atom_num[i] = int(6)
 
-    elif data_copy[0]['atoms'][i] == 2.0:
+        elif data_copy[0]['atoms'][i] == 2.0:
 
-        type_atom_num[i] = int(1)
+            type_atom_num[i] = int(1)
 
-type_atom_num
+    type_atom_num
+
+elif args.system == 'ADP':
+    for i in range(len(data_copy[0]['atoms'])):
+
+        #print(data_copy[0]['atoms'][i])
+        # #print(data_copy[0]['atoms'][i])    
+        if data_copy[0]['atoms'][i] in  {1.0, 6.0, 7.0}: # Types 1,6 and 7 are Hydrogen atoms
+
+            type_atom_num[i] = int(1)
+
+        elif data_copy[0]['atoms'][i] in {2.0, 3.0}: # Types 2 and 3 are Carbon atoms
+
+            type_atom_num[i] = int(6)
+
+        elif data_copy[0]['atoms'][i] == 4.0: # Type 4 is Oxygen atom
+
+            type_atom_num[i] = int(8)
+
+        elif data_copy[0]['atoms'][i] == 5.0:
+
+            type_atom_num[i] = int(7)    
+
+
+elif args.system == 'OG':
+    for i in range(len(data_copy[0]['atoms'])):
+
+        type_atom_num[i] = data_copy[0]['atoms'][i]
+
+     
 
 if args.complete == True:
     np.savez(str(args.title).replace(' ','_')+'.npz', R=coordinates, F=forces, z=type_atom_num, E=poteng)

@@ -9,7 +9,7 @@ import argparse
 parser = argparse.ArgumentParser(description='MOdify atom type array in npz file created from lmpdump_to_npz.py')
 parser.add_argument('npz', type=str, help='npz file to modify')
 parser.add_argument('dumpfile', type=str, help='Original dump file from which npz file was created')
-
+parser.add_argument('-s','--system', help='Specify modifications for a specific system. Options are: "NaClwat" or "AlanineDP"')
 # finish parser 
 args = parser.parse_args()
 
@@ -113,35 +113,55 @@ type_atom_num  = type_atom_num.flatten()
 
 #type_atom_num
 
-#
-for i in range(len(data_copy[0]['atoms'])):
+if args.system == "NaClwat":
 
-    print(data_copy[0]['atoms'][i])
-    # #print(data_copy[0]['atoms'][i])    
-    if data_copy[0]['atoms'][i] == 1.0:
+    for i in range(len(data_copy[0]['atoms'])):
 
-        type_atom_num[i] = int(1)
+        print(data_copy[0]['atoms'][i])
+        # #print(data_copy[0]['atoms'][i])    
+        if data_copy[0]['atoms'][i] == 1.0: # type 1 = H
 
-    elif data_copy[0]['atoms'][i] == 2.0:
+            type_atom_num[i] = int(1)
 
-        type_atom_num[i] = int(8)
+        elif data_copy[0]['atoms'][i] == 2.0: # type 2 = O
 
-    elif data_copy[0]['atoms'][i] == 3.0:
+            type_atom_num[i] = int(8)
 
-        type_atom_num[i] = int(11)
+        elif data_copy[0]['atoms'][i] == 3.0: # type 3 = Na
 
-    elif data_copy[0]['atoms'][i] == 4.0:
+            type_atom_num[i] = int(11)
 
-        type_atom_num[i] = int(17)
+        elif data_copy[0]['atoms'][i] == 4.0: # type 4 = Cl
 
-#type_atom_num
+            type_atom_num[i] = int(17)
 
-#
-# Save it with the new type atom array 
-print("Saving npz file with new atom type array")
-np.savez(args.npz, R=npz['R'], F=npz['F'], z=type_atom_num, E=npz['E'])
+    #type_atom_num
 
-# 
-print("All done! Thank You!")
+    #
+    # Save it with the new type atom array 
+    print("Saving npz file with new atom type array for NaClwat system...")
+    np.savez(args.npz, R=npz['R'], F=npz['F'], z=type_atom_num, E=npz['E'])
 
+    # 
+    print("All done! Thank You!")
 
+elif args.system == "AlanineDP":
+    for i in range(len(data_copy[0]['atoms'])):
+
+        #print(data_copy[0]['atoms'][i])
+        # #print(data_copy[0]['atoms'][i])    
+        if data_copy[0]['atoms'][i] in  {1.0, 6.0, 7.0}: # Types 1,6 and 7 are Hydrogen atoms
+
+            type_atom_num[i] = int(1)
+
+        elif data_copy[0]['atoms'][i] in {2.0, 3.0}: # Types 2 and 3 are Carbon atoms
+
+            type_atom_num[i] = int(6)
+
+        elif data_copy[0]['atoms'][i] == 4.0: # Type 4 is Oxygen atom
+
+            type_atom_num[i] = int(8)
+
+        elif data_copy[0]['atoms'][i] == 5.0:
+
+            type_atom_num[i] = int(7)    

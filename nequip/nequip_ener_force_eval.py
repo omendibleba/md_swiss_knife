@@ -79,7 +79,7 @@ title= str(args.title)
 
 # REad the forces from the .xyz file 
 
-forces = np.zeros((len(traj), 14, 3))
+forces = np.zeros((len(traj), natoms, 3))
 
 for i in range(len(traj)):
     forces[i] = traj[i].get_forces()
